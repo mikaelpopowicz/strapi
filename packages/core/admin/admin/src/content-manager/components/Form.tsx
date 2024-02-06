@@ -47,7 +47,7 @@ const [FormProvider, useForm] = createContext<FormContextValue>('Form');
  * -----------------------------------------------------------------------------------------------*/
 
 interface FormProps<TFormValues extends FormValues = FormValues>
-  extends Partial<Pick<FormContextValue, 'disabled' | 'initialValues'>> {
+  extends Partial<Pick<FormContextValue<TFormValues>, 'disabled' | 'initialValues'>> {
   children: React.ReactNode;
   method: 'POST' | 'PUT';
   onSubmit?: (values: TFormValues, e: React.FormEvent<HTMLFormElement>) => Promise<void> | void;
@@ -130,6 +130,9 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>(
     );
 
     const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+
       if (!onSubmit) {
         return;
       }
@@ -137,7 +140,6 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>(
       dispatch({
         type: 'SUBMIT_ATTEMPT',
       });
-      e.preventDefault();
 
       try {
         const errors = await validate();
@@ -294,7 +296,9 @@ const Form = React.forwardRef<HTMLFormElement, FormProps>(
       </form>
     );
   }
-);
+) as <TFormValues extends FormValues>(
+  p: FormProps<TFormValues> & { ref?: React.Ref<HTMLFormElement> }
+) => React.ReactElement; // we've cast this because we need the generic to infer the type of the form values.;
 
 /**
  * @internal

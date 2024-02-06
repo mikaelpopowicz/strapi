@@ -13,9 +13,9 @@ import { selectSchemas } from '../layout';
 import { useGetComponentConfigurationQuery } from '../services/components';
 import { mergeMetasWithSchema } from '../utils/schemas';
 
-import { SettingsForm } from './EditSettingsView/components/SettingsForm/SettingsForm';
+// import { SettingsForm } from './EditSettingsView/components/SettingsForm/SettingsForm';
 
-const ComponentSettingsView = () => {
+const ComponentConfigurationPage = () => {
   const schemas = useTypedSelector(selectSchemas);
   const permissions = useTypedSelector((state) => state.admin_app.permissions);
   const { uid } = useParams<{ uid: string }>();
@@ -44,23 +44,25 @@ const ComponentSettingsView = () => {
     return <LoadingIndicatorPage />;
   }
 
-  return (
-    <CheckPagePermissions permissions={permissions.contentManager?.componentsConfigurations}>
-      <SettingsForm components={layout.components} layout={layout.component} />
-    </CheckPagePermissions>
-  );
+  return null;
+
+  // return (
+  //   <CheckPagePermissions permissions={permissions.contentManager?.componentsConfigurations}>
+  //     <SettingsForm components={layout.components} layout={layout.component} />
+  //   </CheckPagePermissions>
+  // );
 };
 
-const ProtectedComponentSettingsView = () => {
+const ProtectedComponentConfigurationPage = () => {
   const permissions = useTypedSelector(
     (state) => state.admin_app.permissions.contentManager?.componentsConfigurations
   );
 
   return (
     <CheckPagePermissions permissions={permissions}>
-      <ComponentSettingsView />
+      <ComponentConfigurationPage />
     </CheckPagePermissions>
   );
 };
 
-export { ComponentSettingsView, ProtectedComponentSettingsView };
+export { ComponentConfigurationPage, ProtectedComponentConfigurationPage };

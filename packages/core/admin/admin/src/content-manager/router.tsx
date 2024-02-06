@@ -109,22 +109,20 @@ const routes: RouteObject[] = [
       //     );
 
       //     return {
-      //       Component: ProtectedListSettingsView,
+      //       Component: ProtectedListConfiguration,
       //     };
       //   },
       // },
-      // {
-      //   path: ':collectionType/:slug/configurations/edit',
-      //   lazy: async () => {
-      //     const { ProtectedEditSettingsView } = await import(
-      //       './pages/EditSettingsView/EditSettingsView'
-      //     );
+      {
+        path: ':collectionType/:slug/configurations/edit',
+        lazy: async () => {
+          const { ProtectedEditConfigurationPage } = await import('./pages/EditConfigurationPage');
 
-      //     return {
-      //       Component: ProtectedEditSettingsView,
-      //     };
-      //   },
-      // },
+          return {
+            Component: ProtectedEditConfigurationPage,
+          };
+        },
+      },
       // {
       //   path: 'components/:uid/configurations/edit',
       //   lazy: async () => {

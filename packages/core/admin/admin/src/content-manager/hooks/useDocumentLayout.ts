@@ -77,8 +77,10 @@ interface EditLayout {
       settings: Contracts.Components.ComponentConfiguration['settings'];
     };
   };
-  metadatas?: never;
-  settings: Contracts.ContentTypes.Settings;
+  metadatas?: {
+    [K in keyof Contracts.ContentTypes.Metadatas]: Contracts.ContentTypes.Metadatas[K]['edit'];
+  };
+  settings: Contracts.ContentTypes.Settings & { displayName?: string };
 }
 
 type UseDocumentLayout = (model: string) => {
@@ -248,10 +250,24 @@ const formatEditLayout = (
     {}
   );
 
+  const editMetadatas = Object.entries(data.contentType.metadatas).reduce<EditLayout['metadatas']>(
+    (acc, [attribute, metadata]) => {
+      return {
+        ...acc,
+        [attribute]: metadata.edit,
+      };
+    },
+    {}
+  );
+
   return {
     layout: panelledEditAttributes,
     components: componentEditAttributes,
-    settings: data.contentType.settings,
+    metadatas: editMetadatas,
+    settings: {
+      ...data.contentType.settings,
+      displayName: schema?.info.displayName,
+    },
   };
 };
 
