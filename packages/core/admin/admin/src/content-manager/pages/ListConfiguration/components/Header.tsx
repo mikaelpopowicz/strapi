@@ -1,5 +1,6 @@
 import { Button, HeaderLayout } from '@strapi/design-system';
 import { Link } from '@strapi/design-system/v2';
+import { useQueryParams } from '@strapi/helper-plugin';
 import { ArrowLeft } from '@strapi/icons';
 import { useIntl } from 'react-intl';
 import { NavLink } from 'react-router-dom';
@@ -15,6 +16,7 @@ interface HeaderProps {
 }
 
 const Header = ({ collectionType, name, model }: HeaderProps) => {
+  const [{ rawQuery }] = useQueryParams();
   const { formatMessage } = useIntl();
 
   const modified = useForm('Header', (state) => state.modified);
@@ -26,7 +28,10 @@ const Header = ({ collectionType, name, model }: HeaderProps) => {
         <Link
           startIcon={<ArrowLeft />}
           // @ts-expect-error invalid typings
-          to={`/content-manager/${collectionType}/${model}`}
+          to={{
+            pathname: `/content-manager/${collectionType}/${model}`,
+            search: rawQuery,
+          }}
           id="go-back"
           as={NavLink}
         >

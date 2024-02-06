@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 import {
   Button,
   Flex,
@@ -28,6 +30,7 @@ interface EditFieldFormProps extends Pick<ListFieldLayout, 'attribute'> {
 
 const EditFieldForm = ({ attribute, name, onClose }: EditFieldFormProps) => {
   const { formatMessage } = useIntl();
+  const id = useId();
 
   const { value, onChange } = useField<FormData['layout'][number]>(name);
 
@@ -45,7 +48,7 @@ const EditFieldForm = ({ attribute, name, onClose }: EditFieldFormProps) => {
   }
 
   return (
-    <ModalLayout onClose={onClose} labelledBy="title">
+    <ModalLayout onClose={onClose} labelledBy={id}>
       <Form
         method="PUT"
         initialValues={value}
@@ -58,13 +61,13 @@ const EditFieldForm = ({ attribute, name, onClose }: EditFieldFormProps) => {
           <HeaderContainer>
             {/* @ts-expect-error attribute.type === custom does not work here */}
             <FieldTypeIcon type={attribute.type} />
-            <Typography fontWeight="bold" textColor="neutral800" as="h2" id="title">
+            <Typography fontWeight="bold" textColor="neutral800" as="h2" id={id}>
               {formatMessage(
                 {
                   id: getTranslation('containers.ListSettingsView.modal-form.edit-label'),
                   defaultMessage: 'Edit {fieldName}',
                 },
-                { fieldName: capitalise(name) }
+                { fieldName: capitalise(value.label) }
               )}
             </Typography>
           </HeaderContainer>
